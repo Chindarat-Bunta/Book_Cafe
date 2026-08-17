@@ -1,2 +1,4 @@
-Django
 Django>=5
+dj-database-url
+psycopg2-binary
+python-dotenv

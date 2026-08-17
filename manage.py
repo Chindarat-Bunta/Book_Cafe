@@ -6,6 +6,12 @@ import sys
 
 def main():
     """Run administrative tasks."""
+    try:
+        import dotenv
+        from pathlib import Path
+        dotenv.load_dotenv(Path(__file__).resolve().parent / ".env")
+    except ImportError:
+        pass
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "BookCafe.settings")
     try:
         from django.core.management import execute_from_command_line
