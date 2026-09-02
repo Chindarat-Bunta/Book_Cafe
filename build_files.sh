@@ -1,10 +1,14 @@
 #!/bin/bash
-echo "==> Creating virtual environment..."
-python3 -m venv venv
-source venv/bin/activate
+set -e
+
+echo "==> Preparing staticfiles directory..."
+mkdir -p staticfiles
 
 echo "==> Installing requirements..."
-pip install -r requirements.txt
+python3 -m pip install --break-system-packages -r requirements.txt
 
 echo "==> Collecting static files..."
 python3 manage.py collectstatic --noinput --clear
+
+echo "==> Build complete!"
+ls -la staticfiles
