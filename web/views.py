@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.db import transaction
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST, require_GET
 from .models import Zone, TableZone, Customer, CustomerPhone, Reservation, Review
 
@@ -96,17 +98,25 @@ def book_table(request):
         messages.error(request, msg)
         return redirect("/#reserve")
 
-    # Parse datetime (supports "YYYY-MM-DDTHH:MM" from datetime-local input)
-    try:
-        if "T" in reserve_datetime_str:
-            parsed_dt = datetime.strptime(reserve_datetime_str, "%Y-%m-%dT%H:%M")
-        else:
-            parsed_dt = datetime.strptime(reserve_datetime_str, "%Y-%m-%d %H:%M:%S")
-    except ValueError:
+    # Parse datetime (supports DD/MM/YYYY HH:MM, YYYY-MM-DDTHH:MM, etc.)
+    parsed_dt = None
+    formats_to_try = [
+        "%d/%m/%Y %H:%M",
+        "%d/%m/%Y %H:%M:%S",
+        "%d/%m/%Y",
+        "%Y-%m-%dT%H:%M",
+        "%Y-%m-%d %H:%M:%S",
+        "%Y-%m-%d %H:%M",
+    ]
+    for fmt in formats_to_try:
         try:
-            parsed_dt = datetime.strptime(reserve_datetime_str, "%Y-%m-%d %H:%M")
+            parsed_dt = datetime.strptime(reserve_datetime_str, fmt)
+            break
         except ValueError:
-            parsed_dt = datetime.now()
+            continue
+
+    if not parsed_dt:
+        parsed_dt = datetime.now()
 
     # Split name into first and last name if possible
     name_parts = name.split(None, 1)
@@ -224,3 +234,155 @@ def add_review(request):
             return JsonResponse({"success": False, "message": err_msg}, status=500)
         messages.error(request, err_msg)
         return redirect("/#reviews")
+
+
+# ==============================================================================
+# ADMIN / STAFF BACKEND MANAGEMENT VIEWS
+# ==============================================================================
+
+def admin_login(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        return redirect("admin_dashboard")
+
+    if request.method == "POST":
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "").strip()
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None and user.is_staff:
+            login(request, user)
+            messages.success(request, f"ยินดีต้อนรับคุณ {user.username} เข้าสู่ระบบจัดการร้าน!")
+            return redirect("admin_dashboard")
+        else:
+            messages.error(request, "ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง หรือไม่มีสิทธิ์เข้าถึง")
+
+    return render(request, "login.html")
+
+
+def admin_logout(request):
+    logout(request)
+    messages.info(request, "ออกจากระบบเรียบร้อยแล้ว")
+    return redirect("home")
+
+
+@login_required(login_url="admin_login")
+def admin_dashboard(request):
+    if not request.user.is_staff:
+        messages.error(request, "คุณไม่มีสิทธิ์เข้าถึงส่วนผู้ดูแลระบบ")
+        return redirect("home")
+
+    tables = TableZone.objects.all().order_by("table_id")
+    reservations = Reservation.objects.all().order_by("-reserve_datetime")
+    reviews = Review.objects.all().order_by("-review_id")
+
+    # Map customer information
+    customers_dict = {c.customer_id: c for c in Customer.objects.all()}
+    phones_dict = {p.customer_id: p.phone_number for p in CustomerPhone.objects.all()}
+
+    reservation_items = []
+    for r in reservations:
+        cust = customers_dict.get(r.customer_id)
+        phone = phones_dict.get(r.customer_id, "-")
+        reservation_items.append({
+            "reservation_id": r.reservation_id,
+            "customer_id": r.customer_id,
+            "customer_name": f"{cust.first_name} {cust.last_name}" if cust else "-",
+            "phone": phone,
+            "table_id": r.table_id,
+            "reserve_datetime": r.reserve_datetime,
+            "confirm_status": r.confirm_status,
+        })
+
+    # Stats
+    total_tables = tables.count()
+    available_tables = tables.filter(status="ว่าง").count()
+    occupied_tables = tables.filter(status="ไม่ว่าง").count()
+    total_reservations = len(reservation_items)
+    pending_reservations = sum(1 for r in reservation_items if r["confirm_status"] == "รอตรวจสอบ")
+    total_reviews = reviews.count()
+
+    context = {
+        "tables": tables,
+        "reservations": reservation_items,
+        "reviews": reviews,
+        "total_tables": total_tables,
+        "available_tables": available_tables,
+        "occupied_tables": occupied_tables,
+        "total_reservations": total_reservations,
+        "pending_reservations": pending_reservations,
+        "total_reviews": total_reviews,
+    }
+    return render(request, "dashboard.html", context)
+
+
+@require_POST
+@login_required(login_url="admin_login")
+def admin_toggle_table(request):
+    if not request.user.is_staff:
+        return JsonResponse({"success": False, "message": "Unauthorized"}, status=403)
+
+    table_id = request.POST.get("table_id", "").strip()
+    table = TableZone.objects.filter(table_id=table_id).first()
+
+    if not table:
+        return JsonResponse({"success": False, "message": f"ไม่พบโต๊ะ {table_id}"}, status=404)
+
+    # Toggle status
+    new_status = "ไม่ว่าง" if table.status == "ว่าง" else "ว่าง"
+    table.status = new_status
+    table.save()
+
+    return JsonResponse({
+        "success": True,
+        "table_id": table.table_id,
+        "new_status": new_status,
+        "message": f"เปลี่ยนสถานะโต๊ะ {table.table_id} เป็น '{new_status}' เรียบร้อยแล้ว"
+    })
+
+
+@require_POST
+@login_required(login_url="admin_login")
+def admin_update_reservation(request):
+    if not request.user.is_staff:
+        return JsonResponse({"success": False, "message": "Unauthorized"}, status=403)
+
+    res_id = request.POST.get("reservation_id", "").strip()
+    new_status = request.POST.get("status", "").strip()
+
+    reservation = Reservation.objects.filter(reservation_id=res_id).first()
+    if not reservation:
+        return JsonResponse({"success": False, "message": f"ไม่พบรายการจอง {res_id}"}, status=404)
+
+    reservation.confirm_status = new_status
+    reservation.save()
+
+    # If cancelled, release table to 'ว่าง'
+    if new_status == "ยกเลิก":
+        TableZone.objects.filter(table_id=reservation.table_id).update(status="ว่าง")
+
+    return JsonResponse({
+        "success": True,
+        "reservation_id": res_id,
+        "status": new_status,
+        "message": f"อัปเดตสถานะการจอง {res_id} เป็น '{new_status}' เรียบร้อยแล้ว"
+    })
+
+
+@require_POST
+@login_required(login_url="admin_login")
+def admin_delete_review(request):
+    if not request.user.is_staff:
+        return JsonResponse({"success": False, "message": "Unauthorized"}, status=403)
+
+    review_id = request.POST.get("review_id", "").strip()
+    review = Review.objects.filter(review_id=review_id).first()
+
+    if not review:
+        return JsonResponse({"success": False, "message": f"ไม่พบรีวิว {review_id}"}, status=404)
+
+    review.delete()
+    return JsonResponse({
+        "success": True,
+        "review_id": review_id,
+        "message": f"ลบรีวิวรหัส {review_id} เรียบร้อยแล้ว"
+    })
