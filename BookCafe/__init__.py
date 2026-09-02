@@ -1,9 +1,9 @@
 try:
-    import MySQLdb
+    import pymysql
+    pymysql.install_as_MySQLdb()
 except ImportError:
     try:
-        import pymysql
-        pymysql.install_as_MySQLdb()
+        import MySQLdb
     except ImportError:
         pass
 
