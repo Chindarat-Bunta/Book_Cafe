@@ -1,49 +1,983 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Cafe & Library Lounge</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>The Book & Brew | Book Cafe & Library Lounge</title>
+    <meta name="description" content="คาเฟ่หนังสือและพื้นที่ห้องสมุดในบรรยากาศผ่อนคลาย จองโต๊ะออนไลน์ รีวิวและแนะนำหนังสือ แบ่งโซนอาหารและโซนอ่านหนังสือเงียบสงบ">
+    
+    <!-- Bootstrap 5 CSS & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Custom Style System -->
+    <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
-<body>
-<!-- header -->
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="https://cdn-icons-png.flaticon.com/512/3389/3389081.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
-      Book Cafe & Library Lounge
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Menu</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-      </ul>
+<body data-bs-spy="scroll" data-bs-target="#mainNav" data-bs-smooth-scroll="true" tabindex="0">
+
+    <!-- ==========================================================================
+         1. NAVBAR
+         ========================================================================== -->
+    <nav class="navbar navbar-expand-lg sticky-top custom-navbar" id="mainNav">
+        <div class="container">
+            <a class="brand-logo-wrapper" href="#home">
+                <div class="brand-icon">
+                    <i class="bi bi-book-half"></i>
+                </div>
+                <div>
+                    <div class="brand-text-title">The Book & Brew</div>
+                    <div class="brand-text-sub">Book Cafe & Library Lounge</div>
+                </div>
+            </a>
+            
+            <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="bi bi-list fs-2 text-dark"></i>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto align-items-center gap-1 mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#home">หน้าหลัก (Home)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#zones">โซนที่นั่ง (Zones)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reserve">จองโต๊ะ (Book Now)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#reviews">รีวิว (Reviews)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">เกี่ยวกับเรา (About)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">ติดต่อเรา (Contact)</a>
+                    </li>
+                    <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                        <a class="btn btn-nav-reserve" href="#reserve">
+                            <i class="bi bi-calendar-check me-1"></i> จองโต๊ะเลย
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- System Messages -->
+    <div class="container mt-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show rounded-4 shadow-sm" role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i> {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
-  </div>
-</nav>
 
-<!-- main -->
- <h1> hello</h1>
+    <!-- ==========================================================================
+         2. HERO SECTION (HOME)
+         ========================================================================== -->
+    <header class="hero-section" id="home">
+        <div class="container">
+            <div class="row align-items-center gy-5">
+                <div class="col-lg-7 hero-content">
+                    <div class="hero-pill-badge">
+                        <i class="bi bi-stars"></i> ยินดีต้อนรับสู่ The Book & Brew
+                    </div>
+                    <h1 class="hero-title">
+                        ที่ที่<span class="highlight-text">กาแฟและหนังสือ</span><br>มาบรรจบกันอย่างลงตัว
+                    </h1>
+                    <p class="hero-description">
+                        คาเฟ่หนังสือขนาดกะทัดรัดและพื้นที่ห้องสมุดในบรรยากาศอบอุ่นเป็นกันเอง (Cozy Book Cafe & Library Lounge) รวม 18 โต๊ะ พร้อมตอบสนองความต้องการอย่างลงตัว โดยจัดแบ่งพื้นที่ออกเป็น 2 โซนหลักอย่างชัดเจน เพื่อความสุขในการอ่านและพักผ่อนของคุณ
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#reserve" class="btn btn-hero-primary">
+                            <i class="bi bi-calendar-plus"></i> จองโต๊ะเลย (Book a Table)
+                        </a>
+                        <a href="#zones" class="btn btn-hero-secondary">
+                            <i class="bi bi-compass"></i> สำรวจโซนที่นั่ง
+                        </a>
+                    </div>
+                </div>
 
+                <div class="col-lg-5">
+                    <div class="hero-stats-card">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="fw-bold mb-0 text-white">สถานะร้านวันนี้</h5>
+                            <span class="badge rounded-pill" style="background-color: var(--palette-mint); color: #064E3B; font-weight: 600;">
+                                <i class="bi bi-record-fill me-1 text-success"></i> เปิดให้บริการ
+                            </span>
+                        </div>
+                        <p class="text-white-50 small mb-4">ร้านเล็ก บรรยากาศอบอุ่น • เปิดบริการทุกวัน 09:00 - 21:00 น.</p>
+                        
+                        <div class="hero-stat-item">
+                            <div class="hero-stat-icon" style="background: rgba(253, 255, 184, 0.2); color: var(--palette-yellow);">
+                                <i class="bi bi-grid-3x3-gap"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold text-white">{{ total_tables }} โต๊ะ</div>
+                                <div class="text-white-50 small">โต๊ะเดี่ยว 10 • โต๊ะคู่ 5 • โต๊ะกลุ่ม 3</div>
+                            </div>
+                        </div>
 
-<!-- footer -->
+                        <div class="hero-stat-item">
+                            <div class="hero-stat-icon" style="background: rgba(77, 255, 190, 0.2); color: var(--palette-mint);">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold text-white" id="statAvailableTables">{{ available_tables }} โต๊ะ</div>
+                                <div class="text-white-50 small">โต๊ะว่างพร้อมจองขณะนี้</div>
+                            </div>
+                        </div>
 
+                        <div class="hero-stat-item">
+                            <div class="hero-stat-icon" style="background: rgba(99, 200, 255, 0.2); color: var(--palette-blue);">
+                                <i class="bi bi-chat-heart"></i>
+                            </div>
+                            <div>
+                                <div class="fs-4 fw-bold text-white">{{ reviews|length }} รีวิว</div>
+                                <div class="text-white-50 small">ความคิดเห็นจากผู้ใช้บริการ</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
-<!-- Bootstrap 5 JS Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!-- ==========================================================================
+         3. ZONES SECTION (โซนที่นั่ง)
+         ========================================================================== -->
+    <section class="section-padding" id="zones">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-tag section-tag-blue">SEATING ZONES</span>
+                <h2 class="section-title">โซนที่นั่งในร้าน (Seating Zones)</h2>
+                <p class="section-subtitle">
+                    ออกแบบมาเพื่อตอบสนองความต้องการของลูกค้าที่หลากหลาย โดยจัดแบ่งพื้นที่ออกเป็น 2 โซนหลักอย่างชัดเจน
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Zone 1 -->
+                <div class="col-lg-6">
+                    <div class="zone-card">
+                        <div class="zone-card-header">
+                            <img src="{% static 'images/zone1.jpg' %}" alt="Zone 1 - Cafe & Food Zone" class="zone-card-img">
+                            <span class="zone-badge zone-badge-1">
+                                <i class="bi bi-cup-hot-fill me-1"></i> โซนที่ 1 (Z01)
+                            </span>
+                        </div>
+                        <div class="zone-card-body">
+                            <h3 class="zone-name">โซนอาหาร & เครื่องดื่ม (Food & Drink Zone)</h3>
+                            <p class="zone-desc">
+                                พื้นที่นี้ออกแบบมาเพื่อให้ลูกค้านำอาหาร ขนม เครื่องดื่ม ทานระหว่างรับประทานอาหารและอ่านหนังสือไปด้วยได้ เหมาะสำหรับการนั่งพักผ่อน พูดคุยสบายๆ หรือทำงานกลุ่ม
+                            </p>
+                            
+                            <div class="zone-rule-box zone-rule-box-1">
+                                <i class="bi bi-exclamation-triangle-fill fs-5 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <strong>เงื่อนไขสำคัญของโซนที่ 1:</strong><br>
+                                    จะต้องเป็นหนังสือส่วนตัวของลูกค้าเองเท่านั้น (ไม่อนุญาตให้นำหนังสือส่วนกลางของร้านเข้ามา เพื่อป้องกันคราบอาหารและเครื่องดื่ม)
+                                </div>
+                            </div>
+
+                            <ul class="zone-features-list">
+                                <li><i class="bi bi-check2-circle text-success"></i> ทานอาหาร ขนม และเครื่องดื่มได้เต็มที่</li>
+                                <li><i class="bi bi-check2-circle text-success"></i> มีโซนระเบียง Outdoor รับลมธรรมชาติ</li>
+                                <li><i class="bi bi-check2-circle text-success"></i> พูดคุยและแลกเปลี่ยนความเห็นระดับเสียงพอเหมาะ</li>
+                            </ul>
+
+                            <button class="btn btn-zone-select btn-zone-select-1" onclick="filterByZone('Z01')">
+                                <i class="bi bi-arrow-right-circle me-1"></i> เลือกจองโต๊ะในโซนที่ 1
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Zone 2 -->
+                <div class="col-lg-6">
+                    <div class="zone-card">
+                        <div class="zone-card-header">
+                            <img src="{% static 'images/zone2.jpg' %}" alt="Zone 2 - Library & Quiet Lounge" class="zone-card-img">
+                            <span class="zone-badge zone-badge-2">
+                                <i class="bi bi-volume-mute-fill me-1"></i> โซนที่ 2 (Z02)
+                            </span>
+                        </div>
+                        <div class="zone-card-body">
+                            <h3 class="zone-name">โซนเงียบสงบ & ห้องสมุด (Quiet & Library Lounge)</h3>
+                            <p class="zone-desc">
+                                พื้นที่ที่เน้นความเงียบสงบและสมาธิในการอ่านหนังสือ สามารถหยิบหนังสือหลากหลายหมวดหมู่จากทางร้านมาอ่าน หรือหนังสือที่นำมาเอง เหมาะสำหรับผู้ที่ต้องการความเงียบและสมาธิสูง
+                            </p>
+                            
+                            <div class="zone-rule-box zone-rule-box-2">
+                                <i class="bi bi-droplet-half fs-5 mt-1 flex-shrink-0"></i>
+                                <div>
+                                    <strong>เงื่อนไขสำคัญของโซนที่ 2:</strong><br>
+                                    อนุญาตให้พกพาน้ำเปล่า หรือเครื่องดื่มที่บรรจุในภาชนะที่มีฝาปิดมิดชิดเท่านั้น (งดอาหารและขนมทุกชนิดเพื่อรักษาความสะอาดและความเงียบ)
+                                </div>
+                            </div>
+
+                            <ul class="zone-features-list">
+                                <li><i class="bi bi-check2-circle text-primary"></i> มีชั้นหนังสือคัดสรรพิเศษของทางร้านให้อ่านฟรี หรือนำมาเอง</li>
+                                <li><i class="bi bi-check2-circle text-primary"></i> โต๊ะเดี่ยวพร้อมฉากกั้นส่วนตัว (Focus Room)</li>
+                                <li><i class="bi bi-check2-circle text-primary"></i> พื้นที่เบาะบีนแบ็กพักผ่อน (Reading Corner)</li>
+                            </ul>
+
+                            <button class="btn btn-zone-select btn-zone-select-2" onclick="filterByZone('Z02')">
+                                <i class="bi bi-arrow-right-circle me-1"></i> เลือกจองโต๊ะในโซนที่ 2
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         4. RESERVATION SECTION (จองโต๊ะ)
+         ========================================================================== -->
+    <section class="section-padding reservation-section" id="reserve">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-tag section-tag-pink">RESERVATION</span>
+                <h2 class="section-title">จองโต๊ะล่วงหน้า (Book Now)</h2>
+                <p class="section-subtitle">
+                    ระบบจองโต๊ะออนไลน์ก่อนเดินทางมาถึง เพื่อความมั่นใจว่ามีโต๊ะและโซนที่ต้องการรองรับคุณอย่างแน่นอน
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Table Selection Panel -->
+                <div class="col-lg-7">
+                    <div class="p-4 bg-white rounded-4 border shadow-sm h-100">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                            <h4 class="fw-bold mb-0 text-dark">
+                                <i class="bi bi-diagram-3 me-2" style="color: var(--palette-pink);"></i>เลือกโต๊ะที่ต้องการ
+                            </h4>
+                            <div class="d-flex align-items-center gap-3 small">
+                                <span><span class="badge" style="background: var(--palette-mint); color: #064E3B;">●</span> ว่าง</span>
+                                <span><span class="badge bg-danger">●</span> ไม่ว่าง</span>
+                            </div>
+                        </div>
+
+                        <!-- Filter buttons -->
+                        <div class="table-filter-bar">
+                            <button type="button" class="filter-btn active" onclick="filterTables('all', this)">ทั้งหมด (18 โต๊ะ)</button>
+                            <button type="button" class="filter-btn" onclick="filterTables('Z01', this)">โซนที่ 1 (10 โต๊ะ)</button>
+                            <button type="button" class="filter-btn" onclick="filterTables('Z02', this)">โซนที่ 2 (8 โต๊ะ)</button>
+                            <button type="button" class="filter-btn" onclick="filterTables('เดี่ยว', this)">โต๊ะเดี่ยว (10 โต๊ะ • เก้าอี้ 1 ตัว)</button>
+                            <button type="button" class="filter-btn" onclick="filterTables('คู่', this)">โต๊ะคู่ (5 โต๊ะ • เก้าอี้ 2 ตัว)</button>
+                            <button type="button" class="filter-btn" onclick="filterTables('กลุ่ม', this)">โต๊ะกลุ่ม (3 โต๊ะ • เก้าอี้ 4 ตัว)</button>
+                        </div>
+
+                        <!-- Tables Grid -->
+                        <div class="tables-grid" id="tablesGrid">
+                            {% for table in tables %}
+                            <div class="table-card {% if table.status == 'ว่าง' %}available{% else %}unavailable{% endif %}"
+                                 data-id="{{ table.table_id }}"
+                                 data-zone="{{ table.zone_id }}"
+                                 data-type="{{ table.table_type }}"
+                                 data-capacity="{{ table.capacity }}"
+                                 data-status="{{ table.status }}"
+                                 onclick="selectTable('{{ table.table_id }}', '{{ table.table_type }}', '{{ table.zone_id }}', '{{ table.capacity }}', '{{ table.status }}')">
+                                <div class="table-id-badge">{{ table.table_id }}</div>
+                                <div class="table-type-label">{{ table.table_type }}</div>
+                                <div class="table-capacity">
+                                    <i class="bi bi-person-fill me-1"></i>เก้าอี้ {{ table.capacity }} ตัว/โต๊ะ
+                                    <span class="badge bg-light text-secondary ms-1">{{ table.zone_id }}</span>
+                                </div>
+                                <span class="status-pill {% if table.status == 'ว่าง' %}status-pill-available{% else %}status-pill-unavailable{% endif %}">
+                                    {{ table.status }}
+                                </span>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="alert alert-light border rounded-3 small text-muted mb-0">
+                            <i class="bi bi-info-circle me-1"></i> <strong>ระบบยืนยันตามลำดับก่อน-หลัง:</strong> หากมีผู้กดเลือกโต๊ะพร้อมกัน คนที่กดยืนยันก่อนจะได้รับสิทธิ์จองโต๊ะไปทันที
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Booking Form Panel -->
+                <div class="col-lg-5">
+                    <div class="form-card">
+                        <div class="form-title">
+                            <i class="bi bi-pencil-square" style="color: var(--palette-pink);"></i> ข้อมูลการจอง
+                        </div>
+
+                        <form id="bookingForm" method="POST" action="{% url 'book_table' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="table_id" id="inputTableId" value="">
+
+                            <!-- 1. ชื่อผู้จอง -->
+                            <div class="form-group">
+                                <label for="inputName" class="form-label">
+                                    1. ชื่อผู้จอง (Your Name) <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control-custom" id="inputName" name="name" placeholder="เช่น สมชาย ใจดี" required>
+                            </div>
+
+                            <!-- 2. เบอร์โทรศัพท์ -->
+                            <div class="form-group">
+                                <label for="inputPhone" class="form-label">
+                                    2. เบอร์โทรศัพท์ (Phone Number) <span class="text-danger">*</span>
+                                </label>
+                                <input type="tel" class="form-control-custom" id="inputPhone" name="phone" placeholder="เช่น 0812345678" pattern="[0-9]{9,10}" required>
+                            </div>
+
+                            <!-- 3. วันเวลาที่จะมาถึง -->
+                            <div class="form-group">
+                                <label for="inputDateTime" class="form-label">
+                                    3. วันเวลาที่จะมาถึง (Date & Time) <span class="text-danger">*</span>
+                                </label>
+                                <input type="datetime-local" class="form-control-custom" id="inputDateTime" name="reserve_datetime" required>
+                            </div>
+
+                            <!-- Selected Table Indicator -->
+                            <div class="selected-table-preview" id="selectedTablePreview">
+                                <div>
+                                    <div class="small fw-bold text-dark">โต๊ะที่เลือก:</div>
+                                    <div id="previewTableText" class="fw-bold text-primary">กรุณาคลิกเลือกโต๊ะจากรายการ</div>
+                                </div>
+                                <span class="badge bg-white text-dark border px-2 py-1" id="previewTableZone">-</span>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn-confirm-booking" id="btnSubmitBooking" disabled>
+                                <i class="bi bi-check2-circle me-1"></i> ยืนยันการจองโต๊ะ
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         5. REVIEWS & COMMUNITY BOARD (รีวิว & แนะนำหนังสือ)
+         ========================================================================== -->
+    <section class="section-padding reviews-section" id="reviews">
+        <div class="container">
+            <div class="text-center">
+                <span class="section-tag section-tag-mint">COMMUNITY & REVIEWS</span>
+                <h2 class="section-title">กระดานรีวิวและแนะนำหนังสือ</h2>
+                <p class="section-subtitle">
+                    แลกเปลี่ยนความประทับใจ แบ่งปันหนังสือเล่มโปรด หรือแนะนำมุมอ่านหนังสือดีๆ ใน The Book & Brew
+                </p>
+            </div>
+
+            <div class="row g-4 mb-5">
+                <!-- Review Form -->
+                <div class="col-lg-4">
+                    <div class="add-review-card h-100">
+                        <h4 class="fw-bold text-dark mb-3">
+                            <i class="bi bi-chat-dots-fill me-2" style="color: var(--palette-blue-dark);"></i>แสดงความคิดเห็น
+                        </h4>
+                        <p class="text-secondary small mb-4">
+                            เขียนรีวิวการใช้งาน หรือแนะนำหนังสือที่ชอบให้เพื่อนๆ นักอ่านได้ตามไปอ่าน
+                        </p>
+
+                        <form id="reviewForm" method="POST" action="{% url 'add_review' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="reviewNickname" class="form-label">ชื่อเล่น (Nickname) <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control-custom" id="reviewNickname" name="nickname" placeholder="เช่น หนอนหนังสือ, พี่สายชิล" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reviewMessage" class="form-label">ข้อความ (Message) <span class="text-danger">*</span></label>
+                                <textarea class="form-control-custom" id="reviewMessage" name="message" rows="4" placeholder="เช่น เพิ่งอ่านหนังสือเล่ม 'ชีวิตคือของฉัน' จบ ดีมากเลย อยู่บนชั้น B นะ" required></textarea>
+                            </div>
+
+                            <button type="submit" class="btn btn-submit-review w-100" id="btnSubmitReview">
+                                <i class="bi bi-send me-1"></i> ส่งความคิดเห็น
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Reviews Feed Grid -->
+                <div class="col-lg-8">
+                    <div class="reviews-grid" id="reviewsFeed">
+                        {% for review in reviews %}
+                        <div class="review-card">
+                            <div class="review-card-header">
+                                <div class="review-avatar">
+                                    {{ review.nickname|slice:":1" }}
+                                </div>
+                                <div>
+                                    <div class="review-nickname">{{ review.nickname }}</div>
+                                    <div class="review-badge">รหัสรีวิว: {{ review.review_id }}</div>
+                                </div>
+                            </div>
+                            <div class="review-message">
+                                "{{ review.message }}"
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12 text-center text-muted py-5">
+                            ยังไม่มีความคิดเห็น มาร่วมเป็นคนแรกที่รีวิวกันเถอะ!
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         6. ABOUT US SECTION (เกี่ยวกับเรา)
+         ========================================================================== -->
+    <section class="section-padding about-section" id="about">
+        <div class="container">
+            <div class="row align-items-center gy-5">
+                <div class="col-lg-6">
+                    <span class="section-tag section-tag-blue">ABOUT US</span>
+                    <h2 class="section-title">เกี่ยวกับ The Book & Brew</h2>
+                    <p class="text-secondary mb-4" style="line-height: 1.8;">
+                        <strong>The Book & Brew</strong> เกิดจากความตั้งใจที่จะสร้างพื้นที่สำหรับคนรักการอ่านและคนที่มองหาพื้นที่ทำงานที่สงบ ผสมผสานเสน่ห์ของกลิ่นกาแฟสดคั่วบดใหม่เข้ากับความเงียบสงบของห้องสมุด
+                    </p>
+                    <p class="text-secondary mb-4" style="line-height: 1.8;">
+                        เราเข้าใจว่าผู้อ่านแต่ละคนมีความต้องการที่ต่างกัน บางท่านต้องการอ่านไปพร้อมกับจิบกาแฟและทานขนม บางท่านต้องการความเงียบสงบขั้นสุดเพื่อจดจ่อ จึงเป็นที่มาของการออกแบบ <strong>2 โซนเฉพาะทาง</strong> เพื่อให้ทุกคนได้ใช้เวลาอย่างมีคุณค่าที่สุด
+                    </p>
+
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            <div class="about-feature-box">
+                                <div class="about-icon-wrapper" style="background: var(--palette-yellow); color: #716D00;">
+                                    <i class="bi bi-book"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2">ชั้นหนังสือคัดสรรพิเศษ</h5>
+                                <p class="text-muted small mb-0">มุมหนังสือคุณภาพคัดสรรหมวดวรรณกรรมและพัฒนาตนเองให้อ่านฟรีอย่างอบอุ่น</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="about-feature-box">
+                                <div class="about-icon-wrapper" style="background: var(--palette-mint); color: #064E3B;">
+                                    <i class="bi bi-wifi"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2">Free Wi-Fi & ปลั๊กไฟ</h5>
+                                <p class="text-muted small mb-0">มีเต้ารับไฟฟ้าสำหรับแล็ปท็อปและ Wi-Fi ความเร็วสูงทุกโต๊ะ</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="about-feature-box">
+                                <div class="about-icon-wrapper" style="background: var(--palette-blue); color: #034D75;">
+                                    <i class="bi bi-cup-straw"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2">Specialty Coffee</h5>
+                                <p class="text-muted small mb-0">เมล็ดกาแฟคัดพิเศษ และเบเกอรี่โฮมเมดอบสดใหม่ทุกวัน</p>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="about-feature-box">
+                                <div class="about-icon-wrapper" style="background: var(--palette-pink); color: #ffffff;">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+                                <h5 class="fw-bold mb-2">ระบบจองล่วงหน้า</h5>
+                                <p class="text-muted small mb-0">การันตีมีที่นั่งแน่นอนด้วยระบบจองแบบ Real-time</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="position-relative">
+                        <img src="{% static 'images/about.jpg' %}" alt="About Book & Brew" class="img-fluid rounded-4 shadow-lg w-100" style="max-height: 480px; object-fit: cover;">
+                        <div class="position-absolute bottom-0 start-0 p-4 m-3 bg-white rounded-4 shadow-lg border" style="max-width: 280px;">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="brand-icon">
+                                    <i class="bi bi-quote"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark small">"A room without books is like a body without a soul."</div>
+                                    <div class="text-muted" style="font-size: 0.72rem;">— Cicero</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+         7. CONTACT US & FOOTER (ติดต่อเรา)
+         ========================================================================== -->
+    <footer class="contact-section" id="contact">
+        <div class="container">
+            <div class="row gy-5">
+                <div class="col-lg-4">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="brand-icon">
+                            <i class="bi bi-book-half"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0 text-white">The Book & Brew</h4>
+                            <div class="text-white-50 small">Book Cafe & Library Lounge</div>
+                        </div>
+                    </div>
+                    <p class="text-white-50 small mb-4" style="line-height: 1.7;">
+                        พื้นที่พักผ่อนและทำงานที่ผสานกลิ่นอายของคาเฟ่กาแฟคุณภาพและห้องสมุดสไตล์โมเดิร์น พร้อมต้อนรับทุกท่านทุกวัน
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-btn" title="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="social-btn" title="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="social-btn" title="Line"><i class="bi bi-line"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <h5 class="fw-bold text-white mb-4">ข้อมูลการติดต่อ (Contact Info)</h5>
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <div>
+                            <strong class="d-block text-white">ที่ตั้งร้าน:</strong>
+                            <span class="text-white-50 small">อาคาร The Book & Brew ชั้น 1 ถ.วิทยุ แขวงลุมพินี เขตปทุมวัน กรุงเทพฯ 10330</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="bi bi-clock"></i>
+                        </div>
+                        <div>
+                            <strong class="d-block text-white">เวลาเปิด - ปิด:</strong>
+                            <span class="text-white-50 small">เปิดทุกวัน จันทร์ - อาทิตย์ 09:00 - 21:00 น.</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="bi bi-telephone"></i>
+                        </div>
+                        <div>
+                            <strong class="d-block text-white">เบอร์โทรศัพท์:</strong>
+                            <span class="text-white-50 small">02-123-4567, 081-293-2135</span>
+                        </div>
+                    </div>
+
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+                        <div>
+                            <strong class="d-block text-white">อีเมล:</strong>
+                            <span class="text-white-50 small">contact@bookandbrew.cafe</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <h5 class="fw-bold text-white mb-4">แผนที่จำลอง (Location)</h5>
+                    <div class="contact-map-card text-center">
+                        <div class="p-4 rounded-3 mb-3" style="background: rgba(0,0,0,0.25); border: 1px dashed rgba(255,255,255,0.2);">
+                            <i class="bi bi-geo-alt-fill fs-1" style="color: var(--palette-pink);"></i>
+                            <div class="text-white fw-bold mt-2">The Book & Brew Location</div>
+                            <div class="text-white-50 small">ใกล้สถานี BTS เพลินจิต / MRT ลุมพินี</div>
+                        </div>
+                        <a href="https://maps.google.com" target="_blank" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                            <i class="bi bi-map me-1"></i> เปิดใน Google Maps
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom text-center">
+                <p class="mb-1">© 2026 The Book & Brew (Book Cafe & Library Lounge). All Rights Reserved.</p>
+                <p class="mb-0 text-white-50" style="font-size: 0.78rem;">
+                    Database: MySQL <code>projectdb_6812732132</code> | Powered by Django
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==========================================================================
+         MODALS & ALERTS
+         ========================================================================== -->
+    <!-- Booking Success Modal -->
+    <div class="modal fade" id="bookingSuccessModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header modal-header-mint p-4">
+                    <h5 class="modal-title fw-bold text-white">
+                        <i class="bi bi-check-circle-fill me-2"></i> จองโต๊ะสำเร็จ!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="mb-3">
+                        <span class="badge rounded-pill px-3 py-2 fs-6" style="background: var(--palette-mint); color: #064E3B;">
+                            รหัสการจอง: <span id="modalResId">-</span>
+                        </span>
+                    </div>
+                    <h4 class="fw-bold mb-3 text-dark">ยินดีต้อนรับคุณ <span id="modalCustomerName" class="text-primary">-</span></h4>
+                    <p class="text-secondary mb-4">
+                        การจองโต๊ะ <strong id="modalTableInfo" class="text-dark">-</strong> สำหรับวันเวลา <strong id="modalDateTime" class="text-dark">-</strong> ได้รับการยืนยันลงในระบบฐานข้อมูลเรียบร้อยแล้ว
+                    </p>
+                    <button type="button" class="btn btn-dark rounded-pill px-4 py-2 w-100" data-bs-dismiss="modal">
+                        รับทราบและปิดหน้าต่าง
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Error / Conflict Modal -->
+    <div class="modal fade" id="bookingErrorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content custom-modal-content">
+                <div class="modal-header modal-header-pink p-4">
+                    <h5 class="modal-title fw-bold text-white">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> แจ้งเตือนการจอง
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="fs-1 text-danger mb-3">
+                        <i class="bi bi-x-circle-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-2 text-danger" id="modalErrorMessage">โต๊ะนี้ถูกจองไปแล้ว</h4>
+                    <p class="text-secondary mb-4">
+                        มีผู้ใช้อื่นกดยืนยันการจองโต๊ะนี้ไปก่อนหน้าคุณ หรือโต๊ะไม่ว่างในขณะนี้ กรุณาเลือกโต๊ะตัวอื่นที่ว่างอยู่ในระบบครับ
+                    </p>
+                    <button type="button" class="btn btn-secondary rounded-pill px-4 py-2 w-100" data-bs-dismiss="modal">
+                        เลือกโต๊ะอื่น
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Interactive Client-side Script -->
+    <script>
+        // Set default minimum datetime to now
+        window.addEventListener('DOMContentLoaded', () => {
+            const dtInput = document.getElementById('inputDateTime');
+            if (dtInput) {
+                const now = new Date();
+                // Format to YYYY-MM-DDTHH:MM
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours() + 1).padStart(2, '0');
+                const defaultTime = `${year}-${month}-${day}T${hours}:00`;
+                dtInput.min = `${year}-${month}-${day}T${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                dtInput.value = defaultTime;
+            }
+        });
+
+        // Table Selection Logic
+        let selectedTableId = null;
+
+        function selectTable(id, type, zone, capacity, status) {
+            if (status !== 'ว่าง') {
+                const errorModal = new bootstrap.Modal(document.getElementById('bookingErrorModal'));
+                document.getElementById('modalErrorMessage').textContent = 'โต๊ะนี้ถูกจองไปแล้ว กรุณาเลือกโต๊ะอื่น';
+                errorModal.show();
+                return;
+            }
+
+            selectedTableId = id;
+            document.getElementById('inputTableId').value = id;
+
+            // Highlight in UI
+            document.querySelectorAll('.table-card').forEach(card => card.classList.remove('selected'));
+            const activeCard = document.querySelector(`.table-card[data-id="${id}"]`);
+            if (activeCard) {
+                activeCard.classList.add('selected');
+            }
+
+            // Update preview
+            document.getElementById('previewTableText').textContent = `${id} (${type} • เก้าอี้ ${capacity} ตัว)`;
+            document.getElementById('previewTableZone').textContent = `โซน: ${zone}`;
+            document.getElementById('btnSubmitBooking').disabled = false;
+        }
+
+        // Filter Tables by Category / Zone
+        function filterTables(filter, btnElement) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnElement) btnElement.classList.add('active');
+
+            const cards = document.querySelectorAll('.table-card');
+            cards.forEach(card => {
+                const zone = card.getAttribute('data-zone');
+                const type = card.getAttribute('data-type');
+
+                if (filter === 'all') {
+                    card.style.display = 'block';
+                } else if (filter === 'Z01' || filter === 'Z02') {
+                    card.style.display = zone === filter ? 'block' : 'none';
+                } else {
+                    card.style.display = type.includes(filter) ? 'block' : 'none';
+                }
+            });
+        }
+
+        function filterByZone(zoneId) {
+            const targetBtn = Array.from(document.querySelectorAll('.filter-btn')).find(btn => btn.textContent.includes(zoneId === 'Z01' ? 'โซนที่ 1' : 'โซนที่ 2'));
+            filterTables(zoneId, targetBtn);
+            // Scroll to reserve section
+            const reserveSec = document.getElementById('reserve');
+            if (reserveSec) {
+                reserveSec.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // AJAX Booking Submission
+        const bookingForm = document.getElementById('bookingForm');
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                if (!selectedTableId) {
+                    alert('กรุณาเลือกโต๊ะที่ต้องการจองก่อนครับ');
+                    return;
+                }
+
+                const btn = document.getElementById('btnSubmitBooking');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>กำลังประมวลผล...';
+
+                const formData = new FormData(bookingForm);
+
+                try {
+                    const response = await fetch(bookingForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        // Success modal
+                        document.getElementById('modalResId').textContent = data.reservation_id;
+                        document.getElementById('modalCustomerName').textContent = data.customer_name;
+                        document.getElementById('modalTableInfo').textContent = `${data.table_id} (${data.table_type})`;
+                        document.getElementById('modalDateTime').textContent = data.reserve_datetime;
+                        
+                        const successModal = new bootstrap.Modal(document.getElementById('bookingSuccessModal'));
+                        successModal.show();
+
+                        // Mark table as unavailable in UI
+                        const tableCard = document.querySelector(`.table-card[data-id="${data.table_id}"]`);
+                        if (tableCard) {
+                            tableCard.classList.remove('available', 'selected');
+                            tableCard.classList.add('unavailable');
+                            tableCard.setAttribute('data-status', 'ไม่ว่าง');
+                            const statusPill = tableCard.querySelector('.status-pill');
+                            if (statusPill) {
+                                statusPill.className = 'status-pill status-pill-unavailable';
+                                statusPill.textContent = 'ไม่ว่าง';
+                            }
+                        }
+
+                        // Reset form
+                        bookingForm.reset();
+                        selectedTableId = null;
+                        document.getElementById('inputTableId').value = '';
+                        document.getElementById('previewTableText').textContent = 'กรุณาคลิกเลือกโต๊ะจากรายการ';
+                        document.getElementById('previewTableZone').textContent = '-';
+
+                        // Refresh table counts
+                        refreshTableCounts();
+
+                    } else {
+                        // Concurrency or already booked
+                        document.getElementById('modalErrorMessage').textContent = data.message || 'โต๊ะนี้ถูกจองไปแล้ว';
+                        const errorModal = new bootstrap.Modal(document.getElementById('bookingErrorModal'));
+                        errorModal.show();
+
+                        if (data.already_booked) {
+                            const tableCard = document.querySelector(`.table-card[data-id="${selectedTableId}"]`);
+                            if (tableCard) {
+                                tableCard.classList.remove('available', 'selected');
+                                tableCard.classList.add('unavailable');
+                                tableCard.setAttribute('data-status', 'ไม่ว่าง');
+                                const statusPill = tableCard.querySelector('.status-pill');
+                                if (statusPill) {
+                                    statusPill.className = 'status-pill status-pill-unavailable';
+                                    statusPill.textContent = 'ไม่ว่าง';
+                                }
+                            }
+                            selectedTableId = null;
+                            document.getElementById('inputTableId').value = '';
+                            document.getElementById('previewTableText').textContent = 'กรุณาคลิกเลือกโต๊ะใหม่';
+                        }
+                    }
+                } catch (err) {
+                    alert('เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-check2-circle me-1"></i> ยืนยันการจองโต๊ะ';
+                }
+            });
+        }
+
+        // AJAX Review Submission
+        const reviewForm = document.getElementById('reviewForm');
+        if (reviewForm) {
+            reviewForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                const btn = document.getElementById('btnSubmitReview');
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>กำลังส่ง...';
+
+                const formData = new FormData(reviewForm);
+
+                try {
+                    const response = await fetch(reviewForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        }
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok && data.success) {
+                        // Prepend new review to feed
+                        const feed = document.getElementById('reviewsFeed');
+                        const newCard = document.createElement('div');
+                        newCard.className = 'review-card';
+                        newCard.innerHTML = `
+                            <div class="review-card-header">
+                                <div class="review-avatar">
+                                    ${data.nickname.slice(0, 1)}
+                                </div>
+                                <div>
+                                    <div class="review-nickname">${data.nickname}</div>
+                                    <div class="review-badge">รหัสรีวิว: ${data.review_id} • เพิ่งส่ง</div>
+                                </div>
+                            </div>
+                            <div class="review-message">
+                                "${data.review_text}"
+                            </div>
+                        `;
+                        feed.prepend(newCard);
+                        reviewForm.reset();
+                        alert(data.message);
+                    } else {
+                        alert(data.message || 'ไม่สามารถบันทึกรีวิวได้');
+                    }
+                } catch (err) {
+                    alert('เกิดข้อผิดพลาดในการส่งรีวิว กรุณาลองใหม่');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="bi bi-send me-1"></i> ส่งความคิดเห็น';
+                }
+            });
+        }
+
+        // Helper to update available tables count
+        function refreshTableCounts() {
+            const avail = document.querySelectorAll('.table-card.available').length;
+            const statElem = document.getElementById('statAvailableTables');
+            if (statElem) {
+                statElem.textContent = `${avail} โต๊ะ`;
+            }
+        }
+
+        // ==========================================
+        // Active Nav Link on Scroll (Dynamic ScrollSpy)
+        // ==========================================
+        const navLinks = document.querySelectorAll('#mainNav .nav-link[href^="#"]');
+        const sections = [
+            document.getElementById('home'),
+            document.getElementById('zones'),
+            document.getElementById('reserve'),
+            document.getElementById('reviews'),
+            document.getElementById('about'),
+            document.getElementById('contact')
+        ].filter(Boolean);
+
+        function updateActiveNav() {
+            const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            const navbarHeight = document.getElementById('mainNav')?.offsetHeight || 75;
+            const windowHeight = window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight;
+
+            // If user scrolled near bottom, activate contact
+            if (windowHeight + scrollPosition >= docHeight - 80) {
+                setActiveLink('#contact');
+                return;
+            }
+
+            let currentId = 'home';
+            for (let i = 0; i < sections.length; i++) {
+                const sec = sections[i];
+                const secTop = sec.offsetTop - navbarHeight - 50;
+                if (scrollPosition >= secTop) {
+                    currentId = sec.getAttribute('id');
+                }
+            }
+
+            setActiveLink(`#${currentId}`);
+        }
+
+        function setActiveLink(hash) {
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === hash) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav, { passive: true });
+        window.addEventListener('resize', updateActiveNav);
+        document.addEventListener('DOMContentLoaded', updateActiveNav);
+        setTimeout(updateActiveNav, 150);
+
+        // Smooth scroll and immediate active update on click
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId && targetId.startsWith('#')) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        e.preventDefault();
+                        const navbarHeight = document.getElementById('mainNav')?.offsetHeight || 75;
+                        const targetPosition = targetElement.offsetTop - navbarHeight + 5;
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        setActiveLink(targetId);
+
+                        // Update URL hash without jumping
+                        history.pushState(null, null, targetId);
+
+                        // Auto-collapse navbar on mobile
+                        const navCollapse = document.getElementById('navbarContent');
+                        if (navCollapse && navCollapse.classList.contains('show')) {
+                            bootstrap.Collapse.getInstance(navCollapse)?.hide();
+                        }
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
