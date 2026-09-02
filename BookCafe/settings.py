@@ -95,6 +95,14 @@ if os.environ.get("DATABASE_URL"):
     }
     if "mysql" in DATABASES["default"].get("ENGINE", ""):
         DATABASES["default"].setdefault("OPTIONS", {})["charset"] = "utf8mb4"
+elif os.environ.get("VERCEL"):
+    # On Vercel without external cloud DB, use SQLite so the website runs smoothly!
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 else:
     DATABASES = {
         "default": {
