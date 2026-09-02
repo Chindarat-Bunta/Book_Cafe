@@ -97,13 +97,24 @@ if os.environ.get("DATABASE_URL"):
     if "mysql" in DATABASES["default"].get("ENGINE", ""):
         DATABASES["default"].setdefault("OPTIONS", {})["charset"] = "utf8mb4"
 elif os.environ.get("VERCEL"):
-    # On Vercel without external cloud DB, use SQLite so the website runs smoothly!
+    # On Vercel (read-only filesystem), copy db.sqlite3 to /tmp/ which has write permissions!
+    import shutil
+    tmp_db = "/tmp/db.sqlite3"
+    orig_db = str(BASE_DIR / "db.sqlite3")
+    if not os.path.exists(tmp_db) and os.path.exists(orig_db):
+        try:
+            shutil.copy2(orig_db, tmp_db)
+        except Exception:
+            pass
+    db_file = tmp_db if os.path.exists(tmp_db) else orig_db
+
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+            "NAME": db_file,
         }
     }
+    SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 else:
     DATABASES = {
         "default": {
